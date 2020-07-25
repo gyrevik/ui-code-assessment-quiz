@@ -19,7 +19,7 @@ function Quiz() {
   return (
     <div className="App">
       
-     {data.map(value => <p>{value.category}</p>)}
+     {data.map((value, index) => <p key={index}>{value.category}</p>)}
      
     </div>
   );
