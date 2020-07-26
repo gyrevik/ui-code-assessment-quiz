@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { cleanString } from '../util';
 
 interface Questions {
@@ -17,32 +16,19 @@ function getQuestions(): Promise<Questions[]> {
   // the JSON body is taken from the response
   .then(res => res.json())
   .then(res => {
-    return res as Questions[]
+    console.log('res: ', res)
+    return res.results as Questions[]
   })
 }
 
 function Quiz() {
-  const [data, setData] = useState([{
-    category:'', 
-    question: '', 
-    correct_answer: '',
-    difficulty: '',
-    incorrect_answers: [],
-    type: ''}]);
-
-  
+  const [data, setData] = useState(Array<Questions>());
   
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get(`http://localhost:4000/api/questions`);
-      console.log(response.data.results)
-      //const pd = JSON.parse(response.data.results);
-      //setData(response.data.results);
-      setData(response.data.results);
-    }
-    
-    fetchData();
+    getQuestions().then(questions => setData(questions));
   }, []);
+
+  console.log(data)
 
   return (
     <div className="App">
@@ -52,6 +38,7 @@ function Quiz() {
             question: {`${cleanString(value.question)}`}
             <p>category: {value.category}</p>
             <p>correct answer: {value.correct_answer}</p>
+            <p>incorrect answers: {value.incorrect_answers}</p>
             <p>incorrect answers: {Array(value.incorrect_answers).length}</p>
             
             {/*Array(String(value.incorrect_answers).split(',')).map((answer, i) => {
